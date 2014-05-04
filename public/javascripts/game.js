@@ -1,7 +1,21 @@
 var game = function () {
-    
+
+var blockWidth = 32, blockHeight = 32;
+var width = blockWidth * 25;
+var height = blockHeight * 7;
+
+var level1 = [
+    '***********************************************************************',
+    '-----------------------------------------------------------------------',
+    '----------------------------------------------------****---------------',
+    '-----------------------------------------------------------------------',
+    '--*********--**********---------------------*******-------***----------',
+    '-----------------------------------------------------------------------',
+    '*************___****************************_______********************'
+]
+
     var GAME_TYPE = 'Canvas';
-    Crafty.init(600,600);
+    Crafty.init(width, height);
     Crafty.canvas.init();
 
     Crafty.sprite(64, '/images/char_full.png', {
@@ -9,11 +23,13 @@ var game = function () {
         walking: [0,3],
         shooting: [4,8]
     });
-
+    Crafty.sprite(32, '/images/block.png', {
+        block: [0,0]
+    });
 
     Crafty.scene('loading', function() {
         //load takes an array of assets and a callback when complete
-        Crafty.load(['/images/char_full.png'], function () {
+        Crafty.load(['/images/char_full.png', '/images/block.png'], function () {
             Crafty.scene("main"); //when everything is loaded, run the main scene
         });
 
@@ -87,21 +103,28 @@ var game = function () {
             }
         });
 
-        var platform = Crafty.e("2D, Canvas, Color, platform, Collision, WiredHitBox")
-                         .attr({ x: 0, y: 400, w:400, h:20})
-                         .color("#FF0000")
-                         .collision(new Crafty.polygon([0,0], []))
+        for (var row = 0; row < level1.length; row++) {
+            var cells = level1[row];
+            for (var cell = 0; cell < cells.length; cell++) {
+                if(cells[cell] === '*'){
+                    console.log('row', row);
+                    console.log('cell', cell);
+                    Crafty.e("2D, Canvas, block, platform, Collision")
+                         .attr({ x: cell*blockWidth, y: blockHeight*row, w:32, h:32})  
                          .onHit('player', function(e) { console.log ('well tell that')});
-        var platform2 = Crafty.e("2D, Canvas, Color, platform, Collision, WiredHitBox")
-                         .attr({ x: 484, y: 400, w:900, h:20})
-                         .color("#FF0000");
 
+                }
+            };
+        };
+ 
+        /*
         var topPlatform = Crafty.e('2D, Canvas, Color, Collision, platform, WiredHitBox')
                          .attr({x: 32, y: 300, w:200, h: 10})
                          .color('#149E05');
         var wall = Crafty.e('2D, Canvas, Color, Collision,wall')
                          .attr({ x: 20, y: 380, w:20, h:60})
                          .color('#1BB5E0');
+*/
         var player = Crafty.e("2D, Canvas, player, RightControls, Hero, Animate, Collision, WiredHitBox")
             .attr({x: 160, y: 144, z: 2})
             .rightControls(1)
@@ -117,7 +140,8 @@ var game = function () {
                 this.stop().animate("stance");
             })
             .collision(new Crafty.polygon([24,5],[24,64],[44,64],[44,5]));
-        Crafty.viewport.clampToEntities = false;
+            
+        Crafty.viewport.clampToEntities = true;
         Crafty.viewport.centerOn(player,0);
         Crafty.viewport.follow(player, 0, 0);
     });
