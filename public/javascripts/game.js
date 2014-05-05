@@ -4,16 +4,20 @@ var blockWidth = 32, blockHeight = 32;
 var width = blockWidth * 25;
 var height = blockHeight * 7;
 
+var fullLine = '***********************************************************************';
+var emptyLine ='-----------------------------------------------------------------------';
+
 var level1 = [
-    '***********************************************************************',
-    '-----------------------------------------------------------------------',
+    emptyLine,
+    emptyLine,
     '----------------------------------------------------****---------------',
     '-----------------------------------------------------------------------',
     '--*********--**********---------------------*******-------***----------',
     '-----------------------------------------------------------------------',
     '*************___****************************_______********************'
-]
-
+];
+var maxWidth = blockWidth * (level1[0].length + 1);
+var maxHeight = height;
     var GAME_TYPE = 'Canvas';
     Crafty.init(width, height);
     Crafty.canvas.init();
@@ -71,7 +75,7 @@ var level1 = [
                     console.log(det);
                 })
                 .bind('KeyDown', function (key) {
-                    console.log(key);
+                     
                     if(key.keyIdentifier === 'Up') {
                         this.stop().animate('jump_up', 8, 0).bind('AnimationEnd', function (det) {
                             console.log('jump_up end');
@@ -81,7 +85,7 @@ var level1 = [
                         });
                     }
                     if(key.key === 32) {
-                        this.stop().animate('shoot', 10, -1 );
+                        this.stop().animate('shoot_right', 10, -1 );
                     }
                 });
                 return this; 
@@ -144,6 +148,7 @@ var level1 = [
         Crafty.viewport.clampToEntities = true;
         Crafty.viewport.centerOn(player,0);
         Crafty.viewport.follow(player, 0, 0);
+        Crafty.viewport.bounds = {min:{x:80, y:0}, max:{x:maxWidth, y:maxHeight}};
     });
 
     Crafty.scene('loading');
