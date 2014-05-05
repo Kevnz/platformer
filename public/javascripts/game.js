@@ -53,7 +53,7 @@ var maxHeight = height;
                 .animate("walk_right", 0, 4, 7)
                 .animate("walk_left", 8, 4, 15)
                 .animate('jump_up', 2, 5, 7)
-                .animate('shoot_right', 4, 8, 7)
+                .animate('shoot_right', 4, 3, 7)
                 .animate('stance', 0, 7, 0)
                 .gravity('platform')
                 .bind("NewDirection", function (direction) {
@@ -85,7 +85,8 @@ var maxHeight = height;
                         });
                     }
                     if(key.key === 32) {
-                        this.stop().animate('shoot_right', 10, -1 );
+                        console.log('bang bang');
+                        this.stop().animate('shoot_right', 10, 1 );
                     }
                 });
                 return this; 
@@ -145,10 +146,10 @@ var maxHeight = height;
             })
             .collision(new Crafty.polygon([24,5],[24,64],[44,64],[44,5]));
             
-        Crafty.viewport.clampToEntities = true;
+        Crafty.viewport.clampToEntities = false;
         Crafty.viewport.centerOn(player,0);
         Crafty.viewport.follow(player, 0, 0);
-        Crafty.viewport.bounds = {min:{x:80, y:0}, max:{x:maxWidth, y:maxHeight}};
+        Crafty.viewport.bounds = {min:{x:80, y:-32}, max:{x:maxWidth*10, y:maxHeight*10}};
     });
 
     Crafty.scene('loading');
